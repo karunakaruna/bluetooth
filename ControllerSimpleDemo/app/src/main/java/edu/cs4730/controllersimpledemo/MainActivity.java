@@ -120,6 +120,18 @@ public class MainActivity extends AppCompatActivity {
                         binding.lastBtn.setText("B Button");
                         handled = true;
                         break;
+                    case KeyEvent.KEYCODE_BUTTON_Z:
+                        binding.lastBtn.setText("Z Button");
+                        handled = true;
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_R1:
+                        binding.lastBtn.setText("R1 Button");
+                        handled = true;
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_R2:
+                        binding.lastBtn.setText("R2 Button");
+                        handled = true;
+                        break;
                 }
                 if (!handled) binding.logger.append("code is " + event.getKeyCode() + "\n");
             } else if (event.getAction() == KeyEvent.ACTION_UP) {

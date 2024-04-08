@@ -95,14 +95,14 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initializeGridData() {
         // Arrays of numbers 1 to 5 in five different languages
-        String[] english = {"One", "Two", "Three", "Four", "Five"};
-        String[] spanish = {"Uno", "Dos", "Tres", "Cuatro", "Cinco"};
-        String[] french = {"Un", "Deux", "Trois", "Quatre", "Cinq"};
-        String[] german = {"Eins", "Zwei", "Drei", "Vier", "Fünf"};
-        String[] italian = {"Uno", "Due", "Tre", "Quattro", "Cinque"};
+        String[] one = {"Big Tree", "Roundabout", "Road", "Pothole", "Far Road"};
+        String[] two = {"North Forest", "Big Rock", "Front Yard", "Maple Tree", "Fence"};
+        String[] three = {"Warm Clearing", "Quiet Forest", "Home", "Field", "Shed"};
+        String[] four = {"Path", "Fallen Log", "Back Yard", "Dirt Lot", "Tall Grass"};
+        String[] five = {"Mush Circle", "Grassy Knoll", "Shallow Pool", "Flower Patch", "Sunken Statue"};
 
         // List of the language arrays for easier iteration
-        String[][] languages = {english, spanish, french, german, italian};
+        String[][] languages = {one, two, three, four, five};
 
         // Clear the existing grid data
         gridData.clear();
@@ -163,13 +163,13 @@ public class MainActivity extends AppCompatActivity {
             // LEFT and RIGHT direction accordingly.
             if (Float.compare(xaxis, -1.0f) == 0) {
                 // Dpad.LEFT;
+                y = Math.max(0, y - 1);
                 binding.lastBtn.setText("Dpad Left");
-                y = Math.min(gridData.size() - 1, y + 1);
                 handled = true;
             } else if (Float.compare(xaxis, 1.0f) == 0) {
                 // Dpad.RIGHT;
                 binding.lastBtn.setText("Dpad Right");
-                y = Math.max(0, y - 1);
+                y = Math.min(gridData.size() - 1, y + 1);
 
                 handled = true;
             }

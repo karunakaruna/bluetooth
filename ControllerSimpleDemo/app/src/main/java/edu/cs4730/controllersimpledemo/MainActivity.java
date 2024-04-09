@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import edu.cs4730.controllersimpledemo.databinding.ActivityMainBinding;
 import android.speech.tts.TextToSpeech;
+
+import java.util.HashMap;
 import java.util.Locale;
 import android.util.Log;
 import android.content.pm.PackageManager;
@@ -31,8 +33,13 @@ import android.Manifest;
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     Boolean isJoyStick = false, isGamePad = false;
-    ArrayList<ArrayList<String>> gridData = new ArrayList<>();
+    HashMap<String, ArrayList<ArrayList<String>>> allGridsData = new HashMap<>();
+    ArrayList<ArrayList<String>> mainGridData = new ArrayList<>();
+    ArrayList<ArrayList<String>> currentGrid;
+    String currentGridName = "main";
     int x = 0, y = 0; // Current coordinates for navigating the grid
+    int prevX = 0, prevY = 0; // Previous coordinates for navigating back
+
     private TextToSpeech textToSpeech;
     private static final int PERMISSIONS_REQUEST_CODE = 101;
 
@@ -105,7 +112,10 @@ public class MainActivity extends AppCompatActivity {
         String[][] languages = {one, two, three, four, five};
 
         // Clear the existing grid data
-        gridData.clear();
+        mainGridData.clear();
+
+        // Initialize nested grids
+
 
         // Populate the grid
         for (int i = 0; i < 5; i++) { // For each language
@@ -113,14 +123,41 @@ public class MainActivity extends AppCompatActivity {
             for (int j = 0; j < 5; j++) { // For each number
                 row.add(languages[i][j]); // Add the number in the current language
             }
-            gridData.add(row); // Add the row to the grid
+            mainGridData.add(row); // Add the row to the grid
         }
+
+        ArrayList<ArrayList<String>> bigRockGrid = createDummyGrid();
+        allGridsData.put("Big Rock", bigRockGrid);
+
+        currentGrid = mainGridData;
+
+    }
+    private ArrayList<ArrayList<String>> createDummyGrid() {
+        // New descriptive strings for the 'Big Rock' grid
+        String[][] descriptions = {
+                {"Echoing Cave", "Luminous Moss", "Whispering Wind", "Crimson Sunset", "Forgotten Path"},
+                {"Glimmering Pond", "Shrouded Valley", "Eternal Rain", "Misty Cliffs", "Twilight Grove"},
+                {"Starlit Field", "Ancient Ruins", "Moonlit Stones", "Silver Clouds", "Quiet Oasis"},
+                {"Winding River", "Singing Leaves", "Dancing Shadows", "Golden Dawn", "Sleeping Giants"},
+                {"Hidden Spring", "Secret Meadow", "Lost Horizon", "Fading Light", "Silent Peak"}
+        };
+
+        ArrayList<ArrayList<String>> grid = new ArrayList<>();
+        for (int i = 0; i < descriptions.length; i++) {
+            ArrayList<String> row = new ArrayList<>();
+            for (int j = 0; j < descriptions[i].length; j++) {
+                row.add(descriptions[i][j]);
+            }
+            grid.add(row);
+        }
+        return grid;
     }
 
 
     private void displayCurrentItem() {
         // Fetch the current item
-        String currentItem = gridData.get(y).get(x);
+        String currentItem = currentGrid.get(y).get(x);
+        binding.lastBtn.setText(currentItem);
 
         // Display the current item in the TextView
         binding.lastBtn.setText(currentItem);
@@ -169,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (Float.compare(xaxis, 1.0f) == 0) {
                 // Dpad.RIGHT;
                 binding.lastBtn.setText("Dpad Right");
-                y = Math.min(gridData.size() - 1, y + 1);
+                y = Math.min(mainGridData.size() - 1, y + 1);
 
                 handled = true;
             }
@@ -178,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             else if (Float.compare(yaxis, -1.0f) == 0) {
                 // Dpad.UP;
                 binding.lastBtn.setText("Dpad Up");
-                x = Math.min(gridData.get(0).size() - 1, x + 1);
+                x = Math.min(mainGridData.get(0).size() - 1, x + 1);
                 handled = true;
             } else if (Float.compare(yaxis, 1.0f) == 0) {
                 // Dpad.DOWN;
@@ -211,14 +248,24 @@ public class MainActivity extends AppCompatActivity {
                 switch (event.getKeyCode()) {
                     case KeyEvent.KEYCODE_BUTTON_X:
                         binding.lastBtn.setText("X Button");
+                        Log.d("GameController", "X Button pressed");
                         handled = true;
                         break;
                     case KeyEvent.KEYCODE_BUTTON_A:
                         binding.lastBtn.setText("A Button");
+                        if (!"main".equals(currentGridName)) {
+                            currentGrid = mainGridData; // Switch back to main grid
+                            currentGridName = "main";
+                            x = prevX; // Restore previous coordinates
+                            y = prevY;
+                            displayCurrentItem();
+                        }
                         handled = true;
                         break;
                     case KeyEvent.KEYCODE_BUTTON_Y:
                         binding.lastBtn.setText("Y Button");
+                        String itemName = currentGrid.get(y).get(x);
+                        loadNestedGrid(itemName);
                         handled = true;
                         break;
                     case KeyEvent.KEYCODE_BUTTON_B:
@@ -235,6 +282,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return handled;
+    }
+
+
+    private void loadNestedGrid(String itemName) {
+        ArrayList<ArrayList<String>> nestedGrid = allGridsData.get(itemName);
+        if (nestedGrid != null) {
+            // Save current location before moving to the nested grid
+            prevX = x;
+            prevY = y;
+            currentGrid = nestedGrid;
+            currentGridName = itemName;
+            x = 0; // Reset coordinates for nested grid navigation
+            y = 0;
+            displayCurrentItem();
+        }
     }
 
     @Override

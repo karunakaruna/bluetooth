@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ControllerSimpleDemo</string>
+    <string name="channel_name">Controller Input Service</string>
+    <string name="channel_description">Displays notifications for controller input service.</string>
 </resources>

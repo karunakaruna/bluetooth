@@ -13,12 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import edu.cs4730.controllersimpledemo.databinding.ActivityMainBinding;
 import android.speech.tts.TextToSpeech;
+import androidx.core.app.ActivityCompat;
 
 import java.util.HashMap;
 import java.util.Locale;
 import android.util.Log;
 import android.content.pm.PackageManager;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
 
@@ -29,13 +29,15 @@ import android.Manifest;
  * See https://developer.android.com/training/game-controllers/controller-input.html
  * for a lot more info
  */
+
+
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     Boolean isJoyStick = false, isGamePad = false;
-    HashMap<String, ArrayList<ArrayList<String>>> allGridsData = new HashMap<>();
-    ArrayList<ArrayList<String>> mainGridData = new ArrayList<>();
-    ArrayList<ArrayList<String>> currentGrid;
+    HashMap<String, ArrayList<ArrayList<GridCell>>> allGridsData = new HashMap<>();
+    ArrayList<ArrayList<GridCell>> mainGridData = new ArrayList<>();
+    ArrayList<ArrayList<GridCell>> currentGrid;
     String currentGridName = "main";
     int x = 0, y = 0; // Current coordinates for navigating the grid
     int prevX = 0, prevY = 0; // Previous coordinates for navigating back
@@ -100,40 +102,86 @@ public class MainActivity extends AppCompatActivity {
             startService(serviceIntent);
         }
     }
-    private void initializeGridData() {
-        // Arrays of numbers 1 to 5 in five different languages
-        String[] one = {"Big Tree", "Roundabout", "Road", "Pothole", "Far Road"};
-        String[] two = {"North Forest", "Big Rock", "Front Yard", "Maple Tree", "Fence"};
-        String[] three = {"Warm Clearing", "Quiet Forest", "Home", "Field", "Shed"};
-        String[] four = {"Path", "Fallen Log", "Back Yard", "Dirt Lot", "Tall Grass"};
-        String[] five = {"Mush Circle", "Grassy Knoll", "Shallow Pool", "Flower Patch", "Sunken Statue"};
 
-        // List of the language arrays for easier iteration
-        String[][] languages = {one, two, three, four, five};
+    public class GridCell {
+        private String description;
+        private String item;
+
+        // Constructor
+        public GridCell(String description, String item) {
+            this.description = description;
+            this.item = item;
+        }
+
+        // Getters and Setters
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getItem() {
+            return item;
+        }
+
+        public void setItem(String item) {
+            this.item = item;
+        }
+
+        // Optionally, override toString() for easy printing
+        @Override
+        public String toString() {
+            return "Description: " + description + ", Item: " + item;
+        }
+    }
+
+    private void initializeGridData() {
+        // Example item names corresponding to the languages
+
+
+        // Arrays of numbers 1 to 5 in five different languages
+        String[][] descriptions = {
+                {"Big Tree", "Roundabout", "Road", "Pothole", "Far Road"},
+                {"North Forest", "Big Rock", "Front Yard", "Maple Tree", "Fence"},
+                {"Warm Clearing", "Quiet Forest", "Home", "Field", "Shed"},
+                {"Path", "Fallen Log", "Back Yard", "Dirt Lot", "Tall Grass"},
+                {"Mush Circle", "Grassy Knoll", "Shallow Pool", "Flower Patch", "Sunken Statue"}
+        };
+
+        String[][] items = {
+                {"Tree Item", "Roundabout Item", "Road Item", "Pothole Item", "Far Road Item"},
+                {"Forest Item", "Rock Item", "Yard Item", "Tree Item", "Fence Item"},
+                {"Clearing Item", "Forest Item", "Home Item", "Field Item", "Shed Item"},
+                {"Path Item", "Log Item", "Yard Item", "Lot Item", "Grass Item"},
+                {"Circle Item", "Knoll Item", "Pool Item", "Patch Item", "Statue Item"}
+        };
 
         // Clear the existing grid data
         mainGridData.clear();
 
-        // Initialize nested grids
-
-
-        // Populate the grid
-        for (int i = 0; i < 5; i++) { // For each language
-            ArrayList<String> row = new ArrayList<>();
-            for (int j = 0; j < 5; j++) { // For each number
-                row.add(languages[i][j]); // Add the number in the current language
+        // Populate the grid with GridCell instances
+        for (int i = 0; i < descriptions.length; i++) {
+            ArrayList<GridCell> row = new ArrayList<>();
+            for (int j = 0; j < descriptions[i].length; j++) {
+                row.add(new GridCell(descriptions[i][j], items[i][j]));
             }
-            mainGridData.add(row); // Add the row to the grid
+            mainGridData.add(row);
         }
 
-        ArrayList<ArrayList<String>> bigRockGrid = createDummyGrid();
+        // Convert the Big Rock grid to use GridCell instances as well
+        ArrayList<ArrayList<GridCell>> bigRockGrid = createDummyGrid();
         allGridsData.put("Big Rock", bigRockGrid);
 
+        // Set currentGrid to the main grid
         currentGrid = mainGridData;
-
     }
-    private ArrayList<ArrayList<String>> createDummyGrid() {
-        // New descriptive strings for the 'Big Rock' grid
+
+    private ArrayList<ArrayList<GridCell>> createDummyGrid() {
+        ArrayList<ArrayList<GridCell>> grid = new ArrayList<>();
+
+        // Example data
         String[][] descriptions = {
                 {"Echoing Cave", "Luminous Moss", "Whispering Wind", "Crimson Sunset", "Forgotten Path"},
                 {"Glimmering Pond", "Shrouded Valley", "Eternal Rain", "Misty Cliffs", "Twilight Grove"},
@@ -142,31 +190,40 @@ public class MainActivity extends AppCompatActivity {
                 {"Hidden Spring", "Secret Meadow", "Lost Horizon", "Fading Light", "Silent Peak"}
         };
 
-        ArrayList<ArrayList<String>> grid = new ArrayList<>();
+        String[][] items = {
+                {"Item1", "Item2", "Item3", "Item4", "Item5"},
+                {"Item6", "Item7", "Item8", "Item9", "Item10"},
+                {"Item11", "Item12", "Item13", "Item14", "Item15"},
+                {"Item16", "Item17", "Item18", "Item19", "Item20"},
+                {"Item21", "Item22", "Item23", "Item24", "Item25"},
+        };
+
         for (int i = 0; i < descriptions.length; i++) {
-            ArrayList<String> row = new ArrayList<>();
+            ArrayList<GridCell> row = new ArrayList<>();
             for (int j = 0; j < descriptions[i].length; j++) {
-                row.add(descriptions[i][j]);
+                row.add(new GridCell(descriptions[i][j], items[i][j]));
             }
             grid.add(row);
         }
+
         return grid;
     }
 
 
     private void displayCurrentItem() {
-        // Fetch the current item
-        String currentItem = currentGrid.get(y).get(x);
-        binding.lastBtn.setText(currentItem);
+        // Assuming currentGrid is now an ArrayList<ArrayList<GridCell>>
+        GridCell currentCell = currentGrid.get(y).get(x);
+        String currentDescription = currentCell.getDescription();
 
-        // Display the current item in the TextView
-        binding.lastBtn.setText(currentItem);
+        // Update the UI to show the description
+        binding.lastBtn.setText(currentDescription);
 
-        // Speak the current item out loud
+        // Speak the description out loud
         if (textToSpeech != null) {
-            textToSpeech.speak(currentItem, TextToSpeech.QUEUE_FLUSH, null, null);
+            textToSpeech.speak(currentDescription, TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
+
 
     @Override
     public void onResume() {
@@ -249,6 +306,15 @@ public class MainActivity extends AppCompatActivity {
                     case KeyEvent.KEYCODE_BUTTON_X:
                         binding.lastBtn.setText("X Button");
                         Log.d("GameController", "X Button pressed");
+                        GridCell currentCell = currentGrid.get(y).get(x);
+                        String currentItem = currentCell.getItem();
+
+                        // Use TextToSpeech to speak the item
+                        if (textToSpeech != null) {
+                            textToSpeech.speak(currentItem, TextToSpeech.QUEUE_FLUSH, null, null);
+                        }
+
+                        Log.d("GameController", "X Button pressed - Item: " + currentItem);
                         handled = true;
                         break;
                     case KeyEvent.KEYCODE_BUTTON_A:
@@ -264,8 +330,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case KeyEvent.KEYCODE_BUTTON_Y:
                         binding.lastBtn.setText("Y Button");
-                        String itemName = currentGrid.get(y).get(x);
-                        loadNestedGrid(itemName);
+                        currentCell = currentGrid.get(y).get(x);
+                        String description = currentCell.getDescription();
+                        loadNestedGrid(description); // Assuming you want to load the grid based on the description
                         handled = true;
                         break;
                     case KeyEvent.KEYCODE_BUTTON_B:
@@ -286,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void loadNestedGrid(String itemName) {
-        ArrayList<ArrayList<String>> nestedGrid = allGridsData.get(itemName);
+        ArrayList<ArrayList<GridCell>> nestedGrid = allGridsData.get(itemName);
         if (nestedGrid != null) {
             // Save current location before moving to the nested grid
             prevX = x;

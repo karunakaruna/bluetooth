@@ -16,6 +16,7 @@ import android.speech.tts.TextToSpeech;
 import androidx.core.app.ActivityCompat;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import android.util.Log;
 import android.content.pm.PackageManager;
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     String currentGridName = "main";
     int x = 0, y = 0; // Current coordinates for navigating the grid
     int prevX = 0, prevY = 0; // Previous coordinates for navigating back
+
+    private boolean isAButtonHeld = false;
+    private boolean isInLiminalSpace = false;
 
     private TextToSpeech textToSpeech;
     private static final int PERMISSIONS_REQUEST_CODE = 101;
@@ -106,11 +110,13 @@ public class MainActivity extends AppCompatActivity {
     public class GridCell {
         private String description;
         private String item;
+        private List<String> subItems; // List to store sub-items
 
         // Constructor
         public GridCell(String description, String item) {
             this.description = description;
             this.item = item;
+            this.subItems = new ArrayList<>(4); // Initialize the list with a capacity of 4
         }
 
         // Getters and Setters
@@ -130,12 +136,31 @@ public class MainActivity extends AppCompatActivity {
             this.item = item;
         }
 
+        public List<String> getSubItems() {
+            return subItems;
+        }
+
+        public void setSubItems(List<String> subItems) {
+            this.subItems = subItems;
+        }
+
+        // Method to add a sub-item
+        public void addSubItem(String subItem) {
+            if (subItems.size() < 4) {
+                subItems.add(subItem);
+            } else {
+                // Handle the case where more than 4 sub-items are being added
+                // This could be an exception or a replacement of an existing item
+            }
+        }
+
         // Optionally, override toString() for easy printing
         @Override
         public String toString() {
-            return "Description: " + description + ", Item: " + item;
+            return "Description: " + description + ", Item: " + item + ", Sub-Items: " + subItems;
         }
     }
+
 
     private void initializeGridData() {
         // Example item names corresponding to the languages
@@ -174,6 +199,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ArrayList<GridCell>> bigRockGrid = createDummyGrid();
         allGridsData.put("Big Rock", bigRockGrid);
 
+        ArrayList<ArrayList<GridCell>> betaGrid = createBetaGrid();
+        allGridsData.put("Field", betaGrid);
+
         // Set currentGrid to the main grid
         currentGrid = mainGridData;
     }
@@ -209,6 +237,80 @@ public class MainActivity extends AppCompatActivity {
         return grid;
     }
 
+    private ArrayList<ArrayList<GridCell>> createBetaGrid() {
+        ArrayList<ArrayList<GridCell>> grid = new ArrayList<>();
+
+        // Example data
+        String[][] descriptions = {
+                {"Tall Chamber", "Ornate Foyer", "North Junction", "Golden Railing", "North East Tower"},
+                {"Chamber Gate", "Gallery", "Northern Path", "Training Ground", "Deep Craig Bridge"},
+                {"Sunset Mall", "Grand Path", "Central Plaza", "Lucid Garden", "East Gate"},
+                {"Telescope Point", "Royal Meadow", "Royal Throne Room", "Deep Chambers", "Tall Wall"},
+                {"South West Tower", "Dock Wall", "Southern Dock", "Lighthouse", "South East Pool"}
+        };
+
+        String[][] items = {
+                {"Item1", "Item2", "Item3", "Item4", "Item5"},
+                {"Item6", "Item7", "Item8", "Item9", "Item10"},
+                {"Item11", "Item12", "Item13", "Item14", "Item15"},
+                {"Item16", "Item17", "Item18", "Item19", "Item20"},
+                {"Item21", "Item22", "Item23", "Item24", "Item25"},
+        };
+
+        String[][][] subItems = {
+                // Sub-items for row 1...
+                {       {"one", "two", "three", "four"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+                // Sub-items for row 2...
+                {       {"Big Tree 1", "Big Tree 2", "Big Tree 3", "Big Tree 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+                // Sub-items for row 3...
+                {       {"Big Tree 1", "Big Tree 2", "Big Tree 3", "Big Tree 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+                // Sub-items for row 4...
+                {       {"Big Tree 1", "Big Tree 2", "Big Tree 3", "Big Tree 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+                // Sub-items for row 5...
+                {       {"Big Tree 1", "Big Tree 2", "Big Tree 3", "Big Tree 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+        };
+
+
+        for (int i = 0; i < descriptions.length; i++) {
+            ArrayList<GridCell> row = new ArrayList<>();
+            for (int j = 0; j < descriptions[i].length; j++) {
+                GridCell cell = new GridCell(descriptions[i][j], items[i][j]);
+                // Add sub-items to the cell
+                for (String subItem : subItems[i][j]) {
+                    cell.addSubItem(subItem);
+                }
+                row.add(cell);
+            }
+            grid.add(row);
+        }
+
+        return grid;
+    }
 
     private void displayCurrentItem() {
         // Assuming currentGrid is now an ArrayList<ArrayList<GridCell>>
@@ -219,8 +321,10 @@ public class MainActivity extends AppCompatActivity {
         binding.lastBtn.setText(currentDescription);
 
         // Speak the description out loud
-        if (textToSpeech != null) {
-            textToSpeech.speak(currentDescription, TextToSpeech.QUEUE_FLUSH, null, null);
+        if (!isInLiminalSpace) { // Only speak the description if not in liminal space
+            if (textToSpeech != null) {
+                textToSpeech.speak(currentDescription, TextToSpeech.QUEUE_FLUSH, null, null);
+            }
         }
     }
 
@@ -238,8 +342,7 @@ public class MainActivity extends AppCompatActivity {
         float xaxis = 0.0f, yaxis = 0.0f;
         boolean handled = false;
 
-        //if both are true, this code will show both JoyStick and dpad.  Which one you want to use is
-        // up to you
+        // Joystick handling remains unchanged.
         if (isJoyStick) {
             xaxis = motionEvent.getAxisValue(MotionEvent.AXIS_X);
             yaxis = motionEvent.getAxisValue(MotionEvent.AXIS_Y);
@@ -249,90 +352,125 @@ public class MainActivity extends AppCompatActivity {
             handled = true;
         }
 
-        if (isGamePad) {
-            xaxis = motionEvent.getAxisValue(MotionEvent.AXIS_HAT_X);
-            yaxis = motionEvent.getAxisValue(MotionEvent.AXIS_HAT_Y);
+        // Handling for D-pad navigation.
+        xaxis = motionEvent.getAxisValue(MotionEvent.AXIS_HAT_X);
+        yaxis = motionEvent.getAxisValue(MotionEvent.AXIS_HAT_Y);
 
-            // Check if the AXIS_HAT_X value is -1 or 1, and set the D-pad
-            // LEFT and RIGHT direction accordingly.
+        if (!isInLiminalSpace) {
+            // D-pad navigation logic for moving around the grid.
             if (Float.compare(xaxis, -1.0f) == 0) {
-                // Dpad.LEFT;
                 y = Math.max(0, y - 1);
                 binding.lastBtn.setText("Dpad Left");
                 handled = true;
             } else if (Float.compare(xaxis, 1.0f) == 0) {
-                // Dpad.RIGHT;
-                binding.lastBtn.setText("Dpad Right");
                 y = Math.min(mainGridData.size() - 1, y + 1);
-
+                binding.lastBtn.setText("Dpad Right");
                 handled = true;
-            }
-            // Check if the AXIS_HAT_Y value is -1 or 1, and set the D-pad
-            // UP and DOWN direction accordingly.
-            else if (Float.compare(yaxis, -1.0f) == 0) {
-                // Dpad.UP;
-                binding.lastBtn.setText("Dpad Up");
+            } else if (Float.compare(yaxis, -1.0f) == 0) {
                 x = Math.min(mainGridData.get(0).size() - 1, x + 1);
+                binding.lastBtn.setText("Dpad Up");
                 handled = true;
             } else if (Float.compare(yaxis, 1.0f) == 0) {
-                // Dpad.DOWN;
-                binding.lastBtn.setText("Dpad Down");
                 x = Math.max(0, x - 1);
-                handled = true;
-            } else if ((Float.compare(xaxis, 0.0f) == 0) && (Float.compare(yaxis, 0.0f) == 0)) {
-                //Dpad.center
-                binding.lastBtn.setText("Dpad centered");
+                binding.lastBtn.setText("Dpad Down");
                 handled = true;
             }
-            if (!handled) {
-                binding.lastBtn.setText("Unknown");
-                binding.logger.append("unhandled: X " + xaxis + " Y " + yaxis + "\n");
-            }
+        } else {
+            // Logic for selecting sub-items in liminal space.
+            GridCell currentCell = currentGrid.get(y).get(x);
+            List<String> subItems = currentCell.getSubItems();
 
+            // Make sure the list of sub-items is not empty and has at least 4 elements to avoid IndexOutOfBoundsException.
+            if (subItems.size() >= 4) {
+                if (Float.compare(yaxis, -1.0f) == 0) { // Up
+                    selectSubItem(subItems.get(0));
+                    handled = true;
+                } else if (Float.compare(xaxis, 1.0f) == 0) { // Right
+                    selectSubItem(subItems.get(1));
+                    handled = true;
+                } else if (Float.compare(yaxis, 1.0f) == 0) { // Down
+                    selectSubItem(subItems.get(2));
+                    handled = true;
+                } else if (Float.compare(xaxis, -1.0f) == 0) { // Left
+                    selectSubItem(subItems.get(3));
+                    handled = true;
+                }
+            }
         }
-        displayCurrentItem(); // Update display after navigation
+
+        if (handled) {
+            displayCurrentItem(); // Call to update the display if needed, but consider whether you want to repeat the description.
+        }
         return handled;
     }
+
 
     //getting the buttons.  note, there is down and up action.  this only
     //looks for down actions.
     @Override
     public boolean dispatchKeyEvent(android.view.KeyEvent event) {
         boolean handled = false;
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
         if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
 
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 switch (event.getKeyCode()) {
-                    case KeyEvent.KEYCODE_BUTTON_X:
-                        binding.lastBtn.setText("X Button");
-                        Log.d("GameController", "X Button pressed");
-                        GridCell currentCell = currentGrid.get(y).get(x);
-                        String currentItem = currentCell.getItem();
-
-                        // Use TextToSpeech to speak the item
-                        if (textToSpeech != null) {
-                            textToSpeech.speak(currentItem, TextToSpeech.QUEUE_FLUSH, null, null);
-                        }
-
-                        Log.d("GameController", "X Button pressed - Item: " + currentItem);
-                        handled = true;
-                        break;
                     case KeyEvent.KEYCODE_BUTTON_A:
                         binding.lastBtn.setText("A Button");
+                        if (isInLiminalSpace) {
+                            isInLiminalSpace = false;
+                            Log.d("GameController", "Exiting Liminal Space");
+                            if (textToSpeech != null) {
+                                textToSpeech.speak("Exiting subspace", TextToSpeech.QUEUE_FLUSH, null, null);
+                            }
+                            // Possibly reset liminal space state or do additional cleanup here
+                        } else {
                         if (!"main".equals(currentGridName)) {
                             currentGrid = mainGridData; // Switch back to main grid
                             currentGridName = "main";
                             x = prevX; // Restore previous coordinates
                             y = prevY;
                             displayCurrentItem();
+                        }}
+
+                        handled = true;
+                        break;
+                    case KeyEvent.KEYCODE_BUTTON_X:
+                        binding.lastBtn.setText("X Button");
+
+                        Log.d("GameController", "A Button pressed");
+                        GridCell currentCell = currentGrid.get(y).get(x);
+                        String currentItem = currentCell.getItem();
+                        isAButtonHeld = true;
+                        Log.d("GameController", "A Button held ");
+                        // Use TextToSpeech to speak the item
+                        if (textToSpeech != null) {
+                            textToSpeech.speak(currentItem, TextToSpeech.QUEUE_FLUSH, null, null);
                         }
+
+                        Log.d("GameController", "A Button pressed - Item: " + currentItem);
+
+
                         handled = true;
                         break;
                     case KeyEvent.KEYCODE_BUTTON_Y:
                         binding.lastBtn.setText("Y Button");
                         currentCell = currentGrid.get(y).get(x);
                         String description = currentCell.getDescription();
-                        loadNestedGrid(description); // Assuming you want to load the grid based on the description
+                        if (allGridsData.get(currentCell.getDescription()) == null) {
+                            // No nested grid exists, enter liminal space
+                            Log.d("GameController", "Entering Liminal Space");
+                            if (!isInLiminalSpace) {
+                                if (textToSpeech != null) {
+                                    textToSpeech.speak("Entering subspace", TextToSpeech.QUEUE_FLUSH, null, null);
+                                }
+                            }
+                            isInLiminalSpace = true;
+                        } else {
+                            // Load nested grid as before
+                            loadNestedGrid(currentCell.getDescription());
+                        }
                         handled = true;
                         break;
                     case KeyEvent.KEYCODE_BUTTON_B:
@@ -342,13 +480,29 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (!handled) binding.logger.append("code is " + event.getKeyCode() + "\n");
             } else if (event.getAction() == KeyEvent.ACTION_UP) {
-                //don't care, but need to handle it.
-                handled = true;
-            } else {
+                if (event.getKeyCode() == KeyEvent.KEYCODE_BUTTON_A) {
+                    isAButtonHeld = false;
+                    Log.d("GameController", "A Button released ");
+                    handled = true;
+                }
+                // ... Add additional handling for other button releases if needed
+                if (!handled) {
+                    binding.logger.append("Unhandled code on up: " + event.getKeyCode() + "\n");
+                }
+            }
+            else {
                 binding.logger.append("unknown action " + event.getAction());
             }
         }
         return handled;
+    }
+
+
+    private void selectSubItem(String subItem) {
+        Log.d("GameController", "Selecting SubItem: " + subItem); // Add this log
+        if (textToSpeech != null && subItem != null) {
+            textToSpeech.speak(subItem, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
     }
 
 

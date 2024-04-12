@@ -219,17 +219,60 @@ public class MainActivity extends AppCompatActivity {
         };
 
         String[][] items = {
-                {"Item1", "Item2", "Item3", "Item4", "Item5"},
+                {"Flashlight, Black and White Chess Pieces, Dark Mask, Empty Book", "Heraldic Shield, Hat with Huge Feather, Glove with Very Sticky Fingers, Fishing Rod with Lure", "Sword With a Mouth Guard, A Wet Bandaid, Fish Bone, Basket Full of Flowers", "Item4", "Item5"},
                 {"Item6", "Item7", "Item8", "Item9", "Item10"},
                 {"Item11", "Item12", "Item13", "Item14", "Item15"},
                 {"Item16", "Item17", "Item18", "Item19", "Item20"},
                 {"Item21", "Item22", "Item23", "Item24", "Item25"},
         };
 
+        String[][][] subItems = {
+                // Sub-items for row 1...
+                {       {"Law 1. Never Outshine the Master", "Law 2. Never Put Too Much Trust in Friends, Learn How to Use Enemies", "Law 3. Conceal Your Intentions", "Law 4. Always Say Less Than Necessary"},
+                        {"Law 5. So Much Depends on Reputation--Guard It with Your Life", "Law 6. Court Attention at All Cost", "Law 7. Get Others to Do the Work for You, but Always Take the Credit", "Law 8. Make Other People Come to You--Use Bait If Necessary"},
+                        {"Law 9. Win Through Your Actions, Never through Argument", "Law 10. Infection: Avoid the Unhappy and Unlucky", "Law 11. Learn to Keep People Dependent on You", "Law 12. Use Selective Honesty and Generosity to Disarm Your Victim"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+                // Sub-items for row 2...
+                {       {"Big Tree 1", "Big Tree 2", "Big Tree 3", "Big Tree 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+                // Sub-items for row 3...
+                {       {"Big Tree 1", "Big Tree 2", "Big Tree 3", "Big Tree 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+                // Sub-items for row 4...
+                {       {"Big Tree 1", "Big Tree 2", "Big Tree 3", "Big Tree 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+                // Sub-items for row 5...
+                {       {"Big Tree 1", "Big Tree 2", "Big Tree 3", "Big Tree 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                        {"Roundabout 1", "Roundabout 2", "Roundabout 3", "Roundabout 4"},
+                },
+        };
+
         for (int i = 0; i < descriptions.length; i++) {
             ArrayList<GridCell> row = new ArrayList<>();
             for (int j = 0; j < descriptions[i].length; j++) {
-                row.add(new GridCell(descriptions[i][j], items[i][j]));
+                GridCell cell = new GridCell(descriptions[i][j], items[i][j]);
+                // Add sub-items to the cell
+                for (String subItem : subItems[i][j]) {
+                    cell.addSubItem(subItem);
+                }
+                row.add(cell);
             }
             grid.add(row);
         }
@@ -327,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
 
     @Override
@@ -465,6 +509,12 @@ public class MainActivity extends AppCompatActivity {
                                 if (textToSpeech != null) {
                                     textToSpeech.speak("Entering subspace", TextToSpeech.QUEUE_FLUSH, null, null);
                                 }
+                            }
+                            String currentItemlist = currentCell.getItem();
+
+                            // Use TextToSpeech to speak the item
+                            if (textToSpeech != null) {
+                                textToSpeech.speak(currentItemlist, TextToSpeech.QUEUE_FLUSH, null, null);
                             }
                             isInLiminalSpace = true;
                         } else {

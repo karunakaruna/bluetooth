@@ -202,6 +202,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ArrayList<GridCell>> betaGrid = createBetaGrid();
         allGridsData.put("Field", betaGrid);
 
+        ArrayList<ArrayList<GridCell>> barracksGrid = createBarracks();
+        allGridsData.put("Barracks", barracksGrid);
+
         // Set currentGrid to the main grid
         currentGrid = mainGridData;
     }
@@ -280,6 +283,208 @@ public class MainActivity extends AppCompatActivity {
         return grid;
     }
 
+    private ArrayList<ArrayList<GridCell>> createBarracks() {
+        ArrayList<ArrayList<GridCell>> grid = new ArrayList<>();
+
+        // Example data
+        String[][] descriptions = {
+                {"Barrack Cave", "Mossy Entrance", "Highland Field", "Feast Table", "Gnarled Woods"},
+                {"Robert's Statue", "Northern Grass", "Trophy Room", "Inner Chamber", "Garden Picnic"},
+                {"Stone", "Middle Grass", "Crown Room", "Grassy Mall", "Willow Tree"},
+                {"Quarry", "Southern Grass", "Silken Pond", "Tattered Shed", "Cathedral Room"},
+                {"Quarry Store", "Lake", "Boat", "Lilies", "Dock"}
+        };
+
+        String[][] items = {
+                {
+                        "Flashlight, Black and White Chess Pieces, Dark Mask, Empty Book",
+                        "Heraldic Shield, Hat with Huge Feather, Glove with Very Sticky Fingers",
+                        "Sword With a Mouth Guard, A Wet Bandaid, Fish Bone, Basket Full of Flowers",
+                        "A Mirror Facing Away, A Birthday Cake with Eyes, Anvil and Big Hammer, An empty glass cake case",
+                        "A cross bow that shoots all directions, A castle made of windows and doors, A silverback gorilla"
+                },
+                {
+                        " ",
+                        " ",
+                        "A map with pins, A Seethrough trophy, A circle of playing cards, Wizard of Oz Curtains",
+                        "A Volcanic Human, Burning Hands, A golden cross, A Golden Cross Sword",
+                        "A ring made of cheese, A baby sucker made of honey, A white Flag, Pile of war figurines"
+                },
+                {
+                        " ",
+                        " ",
+                        "Thumbscrew, A crown with very tall horns, A clock with a target on it, A glass case full of shit",
+                        " ",
+                        " "
+                },
+                {
+                        " ",
+                        " ",
+                        "Fireworks, A man in a long coat, A long stick in water, An old fish, smelly and rotten on a plate",
+                        "Paul Bunyon's Boots A story tall, A shepards crook covered in blood, A circle of stones shaped like hearts and brains",
+                        "A popes hat made of stone, A smiling tree with a piece of spinach, A gallon of Worth, Sparkling Water"
+
+                },
+                {
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " "
+                }
+        };
+
+
+        String[][][] subItems = {
+                // Sub-items for row 1...
+                {       {"Law 1. Never Outshine the Master",
+                        "Law 2. Never Put Too Much Trust in Friends, Learn How to Use Enemies",
+                        "Law 3. Conceal Your Intentions",
+                        "Law 4. Always Say Less Than Necessary"},
+
+                        {"Law 5. So Much Depends on Reputation--Guard It with Your Life",
+                        "Law 6. Court Attention at All Cost",
+                        "Law 7. Get Others to Do the Work for You, but Always Take the Credit",
+                        "Law 8. Make Other People Come to You--Use Bait If Necessary"},
+
+                        {"Law 9. Win Through Your Actions, Never through Argument",
+                        "Law 10. Infection: Avoid the Unhappy and Unlucky",
+                        "Law 11. Learn to Keep People Dependent on You",
+                        "Law 12. Use Selective Honesty and Generosity to Disarm Your Victim"},
+
+                        {"Law 13. When Asking for Help, Appeal to People's Self-Interest, Never to Their Mercy or Gratitude",
+                        "Law 14. Pose as a Friend, Work as a Spy",
+                        "Law 15. Crush Your Enemy Totally",
+                        "Law 16. Use Absence to Increase Respect and Honor"},
+
+
+                        {"Law 17. Keep Others in Suspended Terror: Cultivate an Air of Unpredictability",
+                        "Law 18. Do Not Build Fortresses to Protect Yourself--Isolation Is Dangerous",
+                        "Law 19. Know Who You're Dealing With--Do Not Offend the Wrong Person",
+                        "Law 20. Do Not Commit to Anyone"},
+                },
+                // Sub-items for row 2...
+                {       {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"Law 29. Plan all the Way to the End",
+                        "Law 30. Make Your Accomplishments Seem Effortless",
+                        "Law 31. Control the Options: Get Others to Play with the Cards You Deal",
+                        "Law 32. Play to People's Fantasies"},
+
+                        {"Law 25. Re-Create Yourself",
+                        "Law 26. Keep Your Hands Clean",
+                        "Law 27. Play on People's Need to Believe to Create a Cultlike Following",
+                        "Law 28. Enter Action with Boldness"},
+
+                        {"Law 21. Play a Sucker to Catch a Sucker--Seem Dumber than Your Mark",
+                        "Law 22. Use the Surrender Tactic: Transform Weakness into Power",
+                        "Law 23. Concentrate Your Forces",
+                        "Law 24. Play the Perfect Courtier"},
+                },
+                // Sub-items for row 3...
+                {       {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"Law 33. Discover Each Man's Thumbscrew",
+                        "Law 34. Be Royal in Your Own Fashion: Act Like a King to Be Treated Like One",
+                        "Law 35. Master the Art of Timing",
+                        "Law 36. Disdain Things You Cannot Have: Ignoring Them is the Best Revenge"},
+
+                        {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"",
+                        "",
+                        "",
+                        ""},
+                },
+                // Sub-items for row 4...
+                {       {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"Law 37. Create Compelling Spectacles",
+                        "Law 38. Think as You Like But Behave Like Others",
+                        "Law 39. Stir Up Waters to Catch Fish",
+                        "Law 40. Despise the Free Lunch"},
+
+                        {"Law 41. Avoid Stepping Into a Great Man's Shoes",
+                        "Law 42. Strike the Shepherd and the Sheep Will Scatter",
+                        "Law 43. Work on the Hearts and Minds of Others",
+                        "Law 44. Disarm and Infuriate with the Mirror Effect"},
+
+                        {"Law 45. Preach the Need for Change, but Never Reform too Much at Once",
+                        "Law 46. Never Appear too Perfect",
+                        "Law 47. Do Not Go Past the Mark You Aimed For; in Victory, Learn When to Stop",
+                        "Law 48. Assume Formlessness"},
+                },
+                // Sub-items for row 5...
+                {       {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"",
+                        "",
+                        "",
+                        ""},
+
+                        {"",
+                        "",
+                        "",
+                        ""},
+                },
+        };
+
+        for (int i = 0; i < descriptions.length; i++) {
+            ArrayList<GridCell> row = new ArrayList<>();
+            for (int j = 0; j < descriptions[i].length; j++) {
+                GridCell cell = new GridCell(descriptions[i][j], items[i][j]);
+                // Add sub-items to the cell
+                for (String subItem : subItems[i][j]) {
+                    cell.addSubItem(subItem);
+                }
+                row.add(cell);
+            }
+            grid.add(row);
+        }
+
+        return grid;
+    }
+
     private ArrayList<ArrayList<GridCell>> createBetaGrid() {
         ArrayList<ArrayList<GridCell>> grid = new ArrayList<>();
 
@@ -288,7 +493,7 @@ public class MainActivity extends AppCompatActivity {
                 {"Tall Chamber", "Ornate Foyer", "North Junction", "Golden Railing", "North East Tower"},
                 {"Chamber Gate", "Gallery", "Northern Path", "Training Ground", "Deep Craig Bridge"},
                 {"Sunset Mall", "Grand Path", "Central Plaza", "Lucid Garden", "East Gate"},
-                {"Telescope Point", "Royal Meadow", "Royal Throne Room", "Deep Chambers", "Tall Wall"},
+                {"Telescope Point", "Royal Meadow", "Royal Throne Room", "Deep Chambers", "Barracks"},
                 {"South West Tower", "Dock Wall", "Southern Dock", "Lighthouse", "South East Pool"}
         };
 
